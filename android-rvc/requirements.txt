@@ -1,0 +1,27 @@
+# RVC Android App - 精简版依赖
+# 只包含翻唱功能必需的依赖
+
+# 核心依赖（固定RVC官方验证过的版本，兼容ARM64 Linux）
+torch==2.3.1
+torchaudio==2.3.1
+numpy==1.23.5
+scipy
+librosa==0.9.1
+soundfile>=0.12.1
+
+# RVC特定依赖
+# 显式安装PyYAML：omegaconf 2.0.x 的依赖声明格式无效（PyYAML (>=5.1.*)），
+# 会被 pip 忽略，若不显式安装会导致 omegaconf import 报 No module named 'yaml'
+PyYAML>=5.4
+fairseq==0.12.2
+faiss-cpu==1.7.3
+praat-parselmouth>=0.4.2
+pyworld==0.3.2
+torchcrepe==0.0.20
+
+# Web服务器
+flask>=2.3.0
+flask-cors>=4.0.0
+
+# 音频处理
+av

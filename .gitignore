@@ -1,0 +1,18 @@
+# IDE 内部工作目录（含本地文档/计划，不提交）
+.trae/
+
+# 运行时产物
+android-rvc/uploads/
+android-rvc/outputs/
+android-rvc/server.log
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 备份/打包产物
+*.tar.gz
+*.tar.xz
+*.apk
+*.zip

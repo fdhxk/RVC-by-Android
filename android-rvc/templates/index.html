@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVC翻唱工具</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-music"></i>
+                <h1>RVC翻唱工具</h1>
+            </div>
+            <div class="status" id="status">
+                <span class="status-dot"></span>
+                <span class="status-text">连接中...</span>
+            </div>
+        </header>
+
+        <!-- 主要内容 -->
+        <main class="main">
+            <!-- 模型选择区域 -->
+            <section class="section model-section">
+                <h2><i class="fas fa-robot"></i> 选择模型</h2>
+                <div class="model-selector">
+                    <select id="modelSelect" class="select-input">
+                        <option value="">-- 请选择模型 --</option>
+                    </select>
+                    <button id="refreshModels" class="btn btn-secondary" title="刷新模型列表">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="model-info" id="modelInfo" style="display: none;">
+                    <div class="info-item">
+                        <span class="label">版本:</span>
+                        <span id="modelVersion">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">采样率:</span>
+                        <span id="modelSampleRate">-</span>
+                    </div>
+                </div>
+                
+                <!-- 上传模型 -->
+                <div class="upload-section">
+                    <h3><i class="fas fa-upload"></i> 上传新模型</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>拖拽模型文件到此处或点击上传</p>
+                        <p class="hint">支持 .pth 格式</p>
+                        <input type="file" id="modelFile" accept=".pth" style="display: none;">
+                    </div>
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 音频上传区域 -->
+            <section class="section audio-section">
+                <h2><i class="fas fa-file-audio"></i> 上传音频</h2>
+                <div class="audio-upload" id="audioUpload">
+                    <i class="fas fa-microphone"></i>
+                    <p>拖拽音频文件到此处或点击上传</p>
+                    <p class="hint">支持 WAV, MP3, FLAC, OGG 等格式</p>
+                    <input type="file" id="audioFile" accept=".wav,.mp3,.flac,.ogg,.m4a,.aac" style="display: none;">
+                </div>
+                <div class="audio-preview" id="audioPreview" style="display: none;">
+                    <div class="audio-info">
+                        <i class="fas fa-music"></i>
+                        <span id="audioName">-</span>
+                        <span id="audioSize">-</span>
+                    </div>
+                    <audio id="audioPlayer" controls></audio>
+                    <button id="clearAudio" class="btn btn-danger btn-small">
+                        <i class="fas fa-trash"></i> 移除
+                    </button>
+                </div>
+            </section>
+
+            <!-- 参数设置 -->
+            <section class="section params-section">
+                <h2><i class="fas fa-sliders-h"></i> 参数设置</h2>
+                <div class="params-grid">
+                    <div class="param-item">
+                        <label for="f0UpKey">
+                            <i class="fas fa-key"></i> 变调（半音）
+                        </label>
+                        <input type="range" id="f0UpKey" min="-12" max="12" value="0" class="range-input">
+                        <span class="range-value" id="f0UpKeyValue">0</span>
+                    </div>
+                    
+                    <div class="param-item">
+                        <label for="f0Method">
+                            <i class="fas fa-wave-square"></i> 音高提取方法
+                        </label>
+                        <select id="f0Method" class="select-input">
+                            <option value="harvest">Harvest（推荐）</option>
+                            <option value="pm">PM（快速）</option>
+                            <option value="crepe">Crepe（高质量）</option>
+                        </select>
+                    </div>
+                    
+                    <div class="param-item">
+                        <label for="indexRate">
+                            <i class="fas fa-percentage"></i> 索引匹配率
+                        </label>
+                        <input type="range" id="indexRate" min="0" max="1" step="0.01" value="0.66" class="range-input">
+                        <span class="range-value" id="indexRateValue">0.66</span>
+                    </div>
+                    
+                    <div class="param-item">
+                        <label for="filterRadius">
+                            <i class="fas fa-filter"></i> 滤波半径
+                        </label>
+                        <input type="range" id="filterRadius" min="0" max="7" value="3" class="range-input">
+                        <span class="range-value" id="filterRadiusValue">3</span>
+                    </div>
+                    
+                    <div class="param-item">
+                        <label for="rmsMixRate">
+                            <i class="fas fa-volume-up"></i> RMS混合率
+                        </label>
+                        <input type="range" id="rmsMixRate" min="0" max="1" step="0.01" value="1" class="range-input">
+                        <span class="range-value" id="rmsMixRateValue">1</span>
+                    </div>
+                    
+                    <div class="param-item">
+                        <label for="protect">
+                            <i class="fas fa-shield-alt"></i> 保护参数
+                        </label>
+                        <input type="range" id="protect" min="0" max="0.5" step="0.01" value="0.33" class="range-input">
+                        <span class="range-value" id="protectValue">0.33</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 转换按钮 -->
+            <section class="section action-section">
+                <button id="convertBtn" class="btn btn-primary btn-large" disabled>
+                    <i class="fas fa-play"></i> 开始翻唱
+                </button>
+            </section>
+
+            <!-- 结果区域 -->
+            <section class="section result-section" id="resultSection" style="display: none;">
+                <h2><i class="fas fa-check-circle"></i> 转换结果</h2>
+                <div class="result-content">
+                    <div class="result-info">
+                        <div class="info-item">
+                            <span class="label">状态:</span>
+                            <span id="resultStatus">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">耗时:</span>
+                            <span id="resultTime">-</span>
+                        </div>
+                    </div>
+                    <audio id="resultPlayer" controls></audio>
+                    <div class="result-actions">
+                        <button id="downloadBtn" class="btn btn-success">
+                            <i class="fas fa-download"></i> 下载音频
+                        </button>
+                        <button id="convertAgain" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> 再次转换
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>RVC翻唱工具 - 基于AI的语音转换技术</p>
+        </footer>
+    </div>
+
+    <!-- 加载提示 -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loadingText">处理中...</p>
+        </div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

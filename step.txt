@@ -1,0 +1,6 @@
+1.授权储存
+termux-setup-storage
+2.把 rvc-termux-backup-20260812.tar.gz 和 restore.sh 两个文件，放到手机【下载】文件夹
+bash /sdcard/Download/restore.sh
+3启动
+proot-distro login ubuntu -- bash -c "unset ANDROID_ROOT ANDROID_DATA ANDROID_STORAGE ANDROID_ART_ROOT ANDROID_DEXPREOPT_ROOT ANDROID_TZDATA_ROOT 2>/dev/null; cd /root/rvc-app && python3 server.py --host 0.0.0.0 --port 8080"

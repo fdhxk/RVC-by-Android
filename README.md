@@ -28,9 +28,9 @@ Android
 
 ### 方式一：一键恢复（推荐，非技术用户）
 
-1. 从 [Releases](https://github.com/fdhxk/RVC-by-Android/releases) 下载：
+1. 从 [发布](https://github.com/fdhxk/RVC-by-Android/releases) 下载：
    - `Termux.apk`（Termux 安装包，请勿使用应用商店版本）
-   - `rvc-termux-backup-xxx.tar.gz`（已打包好的完整运行环境）
+   - `rvc-termux-backup-2026.tar.gz`（已打包好的完整运行环境）
    - `restore.sh`（安装向导）
 2. 安装并打开 Termux，运行 `termux-setup-storage` 并允许存储权限
 3. 将备份包和 `restore.sh` 放到手机「下载」文件夹
@@ -62,7 +62,7 @@ RVC-by-Android/
 
 ## 模型文件
 
-以下模型文件体积较大，未包含在 Git 仓库中，需自行下载或从 [Releases](https://github.com/fdhxk/RVC-by-Android/releases) 获取：
+以下模型文件体积较大，未包含在 Git 仓库中，需自行下载或从 [发布](https://github.com/fdhxk/RVC-by-Android/releases) 获取：
 
 | 文件 | 目录 | 说明 |
 |------|------|------|

@@ -68,7 +68,6 @@ RVC-by-Android/
 |------|------|------|
 | `hubert_base.pt` | `android-rvc/assets/hubert/` | HuBERT 特征提取模型，约 180MB |
 | `rmvpe.pt` | `android-rvc/assets/rmvpe/` | RMVPE 音高提取模型 |
-| `*.pth` | `android-rvc/models/` | RVC 声音模型（转换目标音色），仓库内置官方示例模型 |
 
 ## 声明
 
